@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETFLIX CLONE — Now Showing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo"><span>NETFLIX CLONE</span><span class="dot">.</span></div>
+        <nav class="main-nav" id="categoryNav"></nav>
+    </header>
+
+    <main>
+        <section class="hero" id="heroSection"></section>
+
+        <section class="row-section">
+            <div class="row-head">
+                <div class="row-title">Trending Now <span class="tag">HOT</span></div>
+                <div class="row-count" id="trendingCount"></div>
+            </div>
+            <div class="row-scroll" id="trendingRow"></div>
+        </section>
+
+        <div id="genreRows"></div>
+    </main>
+
+    <footer>
+        <div class="footer-top">
+            <div class="footer-logo">NETFLIX CLONE.</div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Browse</h4>
+                    <a href="#" onclick="return false;">Trending</a>
+                    <a href="#" onclick="return false;">New Releases</a>
+                    <a href="#" onclick="return false;">Genres</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Account</h4>
+                    <a href="#" onclick="return false;">Favorites</a>
+                    <a href="#" onclick="return false;">Watch History</a>
+                    <a href="#" onclick="return false;">Settings</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <a href="#" onclick="return false;">Help Center</a>
+                    <a href="#" onclick="return false;">Contact</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 NETFLIX CLONE. A demo project, not a real streaming service.</span>
+            <span>Built for learning purposes.</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
