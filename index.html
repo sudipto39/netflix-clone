@@ -14,37 +14,72 @@
 <body>
 
     <header>
-        <div class="logo"><span>NETFLIX CLONE</span><span class="dot">.</span></div>
+        <div class="logo" style="cursor: pointer;" onclick="showHome()"><span>NETFLIX CLONE</span><span class="dot">.</span></div>
         <nav class="main-nav" id="categoryNav"></nav>
+        <div class="header-actions">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Titles, genres..." autocomplete="off">
+                <button class="search-clear hidden" id="searchClear">×</button>
+            </div>
+        </div>
     </header>
 
     <main>
         <section class="hero" id="heroSection"></section>
 
-        <section class="row-section">
+        <!-- Dynamic Sections -->
+        <section class="row-section hidden" id="favoritesSection">
             <div class="row-head">
-                <div class="row-title">Trending Now <span class="tag">HOT</span></div>
-                <div class="row-count" id="trendingCount"></div>
+                <div class="row-title">My List <span class="tag">FAVORITES</span></div>
+                <div class="row-count" id="favoritesCount">0 titles</div>
             </div>
-            <div class="row-scroll" id="trendingRow"></div>
+            <div class="row-scroll" id="favoritesRow"></div>
         </section>
 
-        <div id="genreRows"></div>
+        <section class="row-section hidden" id="searchSection">
+            <div class="row-head">
+                <div class="row-title">Search Results</div>
+                <div class="row-count" id="searchCount">0 results</div>
+            </div>
+            <div class="grid-layout" id="searchGrid"></div>
+        </section>
+
+        <section class="row-section hidden" id="genreFilterSection">
+            <div class="row-head">
+                <div class="row-title" id="filterGenreTitle">Genre</div>
+                <div class="row-count" id="filterGenreCount">0 titles</div>
+            </div>
+            <div class="grid-layout" id="genreFilterGrid"></div>
+        </section>
+
+        <!-- Standard Sections -->
+        <div id="homepageContent">
+            <section class="row-section">
+                <div class="row-head">
+                    <div class="row-title">Trending Now <span class="tag">HOT</span></div>
+                    <div class="row-count" id="trendingCount"></div>
+                </div>
+                <div class="row-scroll" id="trendingRow"></div>
+            </section>
+
+            <div id="genreRows"></div>
+        </div>
     </main>
 
     <footer>
         <div class="footer-top">
-            <div class="footer-logo">NETFLIX CLONE.</div>
+            <div class="footer-logo" style="cursor: pointer;" onclick="showHome()">NETFLIX CLONE.</div>
             <div class="footer-links">
                 <div class="footer-col">
                     <h4>Browse</h4>
-                    <a href="#" onclick="return false;">Trending</a>
-                    <a href="#" onclick="return false;">New Releases</a>
-                    <a href="#" onclick="return false;">Genres</a>
+                    <a href="#" onclick="showHome(); return false;">Trending</a>
+                    <a href="#" onclick="showHome(); return false;">New Releases</a>
+                    <a href="#" onclick="showHome(); return false;">Genres</a>
                 </div>
                 <div class="footer-col">
                     <h4>Account</h4>
-                    <a href="#" onclick="return false;">Favorites</a>
+                    <a href="#" onclick="showFavoritesSection(); return false;">Favorites</a>
                     <a href="#" onclick="return false;">Watch History</a>
                     <a href="#" onclick="return false;">Settings</a>
                 </div>
@@ -60,6 +95,40 @@
             <span>Built for learning purposes.</span>
         </div>
     </footer>
+
+    <!-- Details Modal -->
+    <div id="movieModal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+            <div class="modal-hero" id="modalHero">
+                <div class="modal-hero-bg" id="modalHeroBg"></div>
+                <div class="modal-hero-scrim"></div>
+                <div class="modal-hero-info">
+                    <h2 class="modal-title display" id="modalTitle">Movie Title</h2>
+                    <div class="modal-actions">
+                        <button class="btn btn-primary" id="modalPlayBtn">▶ Play</button>
+                        <button class="btn btn-ghost" id="modalFavBtn">＋ My List</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span class="rating" id="modalRating">★ 8.5</span>
+                    <span id="modalYear">2024</span>
+                    <span>·</span>
+                    <span class="genre-tag" id="modalGenre">Sci-Fi</span>
+                    <span>·</span>
+                    <span id="modalDuration">2h 16m</span>
+                </div>
+                <p class="modal-desc" id="modalDesc">Movie description goes here...</p>
+                <div class="modal-details">
+                    <div><span class="label">Cast:</span> <span id="modalCast">Mock Actor A, Mock Actor B, Mock Actor C</span></div>
+                    <div><span class="label">Director:</span> <span id="modalDirector">Mock Director</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
