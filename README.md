@@ -3,7 +3,7 @@
 [![Vercel Deployment](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)](https://netflix-clone-ten-rho-69.vercel.app/)
 [![Render Backend](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://netflix-clone-ufzp.onrender.com)
 
-> **🚀 Live Demo URL:** [https://netflix-clone-ten-rho-69.vercel.app/](https://netflix-clone-ten-rho-69.vercel.app/) *(or your deployed Vercel domain)*  
+> **🚀 Live Demo URL:** [https://netflix-clone-ten-rho-69.vercel.app/](https://netflix-clone-ten-rho-69.vercel.app/)  
 > **⚡ Backend API Live URL:** [https://netflix-clone-ufzp.onrender.com/api/v1](https://netflix-clone-ufzp.onrender.com/api/v1)
 > **📡 Health Check:** [https://netflix-clone-ufzp.onrender.com/health](https://netflix-clone-ufzp.onrender.com/health)
 
