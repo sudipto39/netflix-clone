@@ -5,7 +5,6 @@
 
 > **🚀 Live Demo URL:** [https://netflix-clone-ten-rho-69.vercel.app/](https://netflix-clone-ten-rho-69.vercel.app/)  
 > **⚡ Backend API Live URL:** [https://netflix-clone-ufzp.onrender.com/api/v1](https://netflix-clone-ufzp.onrender.com/api/v1)
-
 > **📡 Health Check:** [https://netflix-clone-ufzp.onrender.com/health](https://netflix-clone-ufzp.onrender.com/health)
 
 A modern, production-grade **Netflix Clone** (Streamly) built with **React 19, TypeScript, Vite, Tailwind CSS v4**, and a **Node.js, Express, MongoDB (Mongoose)** backend. Features real-time JWT authentication with OTP email verification, multi-profile architecture, Stripe subscription billing, live TMDB metadata integration, admin dashboard with analytics & video CRUD, and a custom HTML5 media player with adaptive fallback streaming.
