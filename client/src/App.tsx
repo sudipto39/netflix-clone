@@ -21,9 +21,11 @@ const HelpPage = lazy(() => import("@/pages/Help"));
 const TitleDetailPage = lazy(() => import("@/pages/TitleDetail"));
 const PrivacyPage = lazy(() => import("@/pages/PrivacyPolicy"));
 const NotFoundPage = lazy(() => import("@/pages/NotFound"));
+const PlansPage = lazy(() => import("@/pages/Plans"));
 const AdminPage = lazy(() => import("@/pages/Admin"));
 const AdminLoginPage = lazy(() => import("@/pages/AdminLogin"));
 import { AdminRouteGuard } from "@/components/AdminRouteGuard";
+import { SubscriptionGuard } from "@/components/SubscriptionGuard";
 
 /**
  * Animated Streamly Logo Startup Splash Screen (Plays on initial app load)
@@ -181,17 +183,81 @@ export default function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/profiles" element={<ProfilesPage />} />
-            <Route path="/browse" element={<BrowsePage />} />
-            <Route path="/tv-shows" element={<TVShowsPage />} />
-            <Route path="/movies" element={<MoviesPage />} />
-            <Route path="/latest" element={<NewPopularPage />} />
-            <Route path="/my-list" element={<MyListPage />} />
-            <Route path="/watch" element={<WatchPage />} />
+            <Route path="/plans" element={<PlansPage />} />
+            <Route
+              path="/profiles"
+              element={
+                <SubscriptionGuard>
+                  <ProfilesPage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/browse"
+              element={
+                <SubscriptionGuard>
+                  <BrowsePage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/tv-shows"
+              element={
+                <SubscriptionGuard>
+                  <TVShowsPage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/movies"
+              element={
+                <SubscriptionGuard>
+                  <MoviesPage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/latest"
+              element={
+                <SubscriptionGuard>
+                  <NewPopularPage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/my-list"
+              element={
+                <SubscriptionGuard>
+                  <MyListPage />
+                </SubscriptionGuard>
+              }
+            />
+            <Route
+              path="/watch"
+              element={
+                <SubscriptionGuard>
+                  <WatchPage />
+                </SubscriptionGuard>
+              }
+            />
             <Route path="/account" element={<AccountPage />} />
-            <Route path="/search" element={<SearchPage />} />
+            <Route
+              path="/search"
+              element={
+                <SubscriptionGuard>
+                  <SearchPage />
+                </SubscriptionGuard>
+              }
+            />
             <Route path="/help" element={<HelpPage />} />
-            <Route path="/title/:id" element={<TitleDetailPage />} />
+            <Route
+              path="/title/:id"
+              element={
+                <SubscriptionGuard>
+                  <TitleDetailPage />
+                </SubscriptionGuard>
+              }
+            />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/404" element={<NotFoundPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />

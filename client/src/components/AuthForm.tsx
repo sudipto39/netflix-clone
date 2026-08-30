@@ -7,6 +7,7 @@ import {
   verifyEmailOtp,
   resendVerificationEmailOtp,
 } from "@/lib/mockAuth";
+import { apiRequest } from "@/lib/api";
 import {
   AlertCircle,
   CheckCircle2,
@@ -107,7 +108,22 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         text: mode === "register" ? "Account created. Welcome to Streamly!" : "Welcome back!",
       });
 
-      setTimeout(() => navigate("/browse"), 200);
+      const cleanEmail = email.toLowerCase().trim();
+      if (cleanEmail === "demo@streamly.com" || cleanEmail === "admin@streamly.com") {
+        setTimeout(() => navigate("/browse"), 200);
+      } else {
+        try {
+          const res = await apiRequest<{ data: { subscription: { status: string; currentPeriodEnd: string | null } } }>("/payments/subscription");
+          const sub = res?.data?.subscription;
+          if (sub?.status === "active" && sub.currentPeriodEnd && new Date(sub.currentPeriodEnd).getTime() > Date.now()) {
+            setTimeout(() => navigate("/browse"), 200);
+          } else {
+            setTimeout(() => navigate("/plans", { state: { required: true } }), 200);
+          }
+        } catch {
+          setTimeout(() => navigate("/plans", { state: { required: true } }), 200);
+        }
+      }
     } catch (error) {
       setMessage({
         type: "error",
@@ -135,7 +151,13 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         type: "success",
         text: "Email verified successfully! Welcome to Streamly.",
       });
-      setTimeout(() => navigate("/browse"), 200);
+
+      const cleanEmail = email.toLowerCase().trim();
+      if (cleanEmail === "demo@streamly.com" || cleanEmail === "admin@streamly.com") {
+        setTimeout(() => navigate("/browse"), 200);
+      } else {
+        setTimeout(() => navigate("/plans", { state: { required: true } }), 200);
+      }
     } catch (err) {
       setMessage({
         type: "error",

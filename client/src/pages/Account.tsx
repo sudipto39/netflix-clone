@@ -221,20 +221,41 @@ export default function AccountPage() {
 
   useEffect(() => {
     // Fetch live subscription status from API
+    // CLIENT-SIDE GUARD: Strip any mock card data for non-demo accounts
+    const userEmail = session?.user?.email?.toLowerCase().trim() ?? "";
+    const isExactDemo = userEmail === "demo@streamly.com";
+
     apiRequest<{ data: SubscriptionState }>("/payments/subscription")
       .then((res) => {
-        if (res.data) setSubData(res.data);
+        if (res.data) {
+          const safeData = { ...res.data };
+          if (!isExactDemo) {
+            // For all non-demo accounts: always clear card details
+            // regardless of what the server sends (guards against stale server code)
+            safeData.subscription = {
+              ...safeData.subscription,
+              cardLast4: "",
+              cardBrand: "",
+            };
+          }
+          setSubData(safeData);
+        }
       })
       .catch(() => {
         // Fallback to local session defaults
       });
 
     // Fetch live billing invoices from API
+    // CLIENT-SIDE GUARD: Even if the server sends invoices, only render them
+    // for the exact demo account. All other users must see an empty history.
+
     apiRequest<{ data: { invoices: typeof invoices } }>("/payments/invoices")
       .then((res) => {
-        if (res?.data?.invoices) {
+        if (res?.data?.invoices && isExactDemo) {
+          // Only demo account can see mock/real invoices from API
           setInvoices(res.data.invoices);
         }
+        // All other accounts always stay at empty array — no billing history shown
       })
       .catch(() => { /* invoices remain empty — no fake data fallback */ })
       .finally(() => setInvoicesLoading(false));
@@ -568,7 +589,14 @@ export default function AccountPage() {
 
         {/* ── PLAN DETAILS ── */}
         <div className="mt-6 rounded-xl border border-white/10 bg-[#181818] p-6 shadow-xl sm:p-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#aaa]">PLAN DETAILS</p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold uppercase tracking-widest text-[#aaa]">PLAN DETAILS</p>
+            {subData.subscription.status === "active" && (
+              <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Membership
+              </span>
+            )}
+          </div>
 
           <div className="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div className="flex items-center gap-3">
@@ -579,25 +607,36 @@ export default function AccountPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowPlanModal(true)}
-                className="rounded border border-white/20 bg-[#262626] px-5 py-2.5 text-xs font-semibold text-white hover:bg-[#333]"
-              >
-                Change Plan
-              </button>
-              {/* MF-3: Cancel subscription button */}
-              {!subData.subscription.cancelAtPeriodEnd ? (
-                <button
-                  onClick={handleCancelSubscription}
-                  disabled={cancelingSubscription}
-                  className="rounded border border-red-700/60 bg-transparent px-5 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-950/40 disabled:opacity-50"
-                >
-                  {cancelingSubscription ? "Canceling..." : "Cancel Subscription"}
-                </button>
+              {subData.subscription.status === "active" ? (
+                <>
+                  <button
+                    onClick={() => setShowPlanModal(true)}
+                    className="rounded border border-white/20 bg-[#262626] px-5 py-2.5 text-xs font-semibold text-white hover:bg-[#333]"
+                  >
+                    Change Plan
+                  </button>
+                  {/* MF-3: Cancel subscription button */}
+                  {!subData.subscription.cancelAtPeriodEnd ? (
+                    <button
+                      onClick={handleCancelSubscription}
+                      disabled={cancelingSubscription}
+                      className="rounded border border-red-700/60 bg-transparent px-5 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-950/40 disabled:opacity-50"
+                    >
+                      {cancelingSubscription ? "Canceling..." : "Cancel Subscription"}
+                    </button>
+                  ) : (
+                    <span className="rounded border border-yellow-700/50 bg-yellow-950/30 px-4 py-2 text-xs font-semibold text-yellow-400">
+                      Cancels on {formattedDate}
+                    </span>
+                  )}
+                </>
               ) : (
-                <span className="rounded border border-yellow-700/50 bg-yellow-950/30 px-4 py-2 text-xs font-semibold text-yellow-400">
-                  Cancels on {formattedDate}
-                </span>
+                <button
+                  onClick={() => navigate("/plans", { state: { required: true } })}
+                  className="rounded bg-[#e50914] px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-[#c80710] shadow-[0_0_15px_rgba(229,9,20,0.5)] transition"
+                >
+                  Choose / Renew Plan in INR (₹)
+                </button>
               )}
             </div>
           </div>

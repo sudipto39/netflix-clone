@@ -14,6 +14,16 @@ export interface ISubscription {
   cancelAtPeriodEnd: boolean;
 }
 
+export interface IInvoice {
+  id: string;
+  date: string;
+  description: string;
+  amount: string;
+  status: string;
+  card: string;
+  paymentMethod?: string;
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -23,6 +33,7 @@ export interface IUser extends Document {
   role: 'user' | 'admin';
   avatar?: string;
   subscription: ISubscription;
+  invoices: IInvoice[];
   refreshTokens: string[];
   otpCode?: string | null;
   otpExpiresAt?: Date | null;
@@ -37,20 +48,20 @@ const subscriptionSchema = new Schema<ISubscription>(
     status: {
       type: String,
       enum: ['none', 'active', 'canceled', 'past_due', 'unpaid'],
-      default: 'active',
+      default: 'none',
     },
     planId: {
       type: String,
       enum: ['mobile', 'standard', 'premium', 'none'],
-      default: 'premium',
+      default: 'none',
     },
     planName: {
       type: String,
-      default: 'PREMIUM',
+      default: 'NO ACTIVE PLAN',
     },
     planSpecs: {
       type: String,
-      default: 'Ultra HD 4K + HDR (4 Screens at once)',
+      default: 'No active subscription',
     },
     stripeCustomerId: {
       type: String,
@@ -70,12 +81,25 @@ const subscriptionSchema = new Schema<ISubscription>(
     },
     currentPeriodEnd: {
       type: Date,
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Default 30 days from now
+      default: null,
     },
     cancelAtPeriodEnd: {
       type: Boolean,
       default: false,
     },
+  },
+  { _id: false }
+);
+
+const invoiceSchema = new Schema<IInvoice>(
+  {
+    id: { type: String, required: true },
+    date: { type: String, required: true },
+    description: { type: String, required: true },
+    amount: { type: String, required: true },
+    status: { type: String, default: 'Paid' },
+    card: { type: String, default: 'Card' },
+    paymentMethod: { type: String, default: 'card' },
   },
   { _id: false }
 );
@@ -129,15 +153,19 @@ const userSchema = new Schema<IUser>(
     subscription: {
       type: subscriptionSchema,
       default: () => ({
-        status: 'active',
-        planId: 'premium',
-        planName: 'PREMIUM',
-        planSpecs: 'Ultra HD 4K + HDR (4 Screens at once)',
+        status: 'none',
+        planId: 'none',
+        planName: 'NO ACTIVE PLAN',
+        planSpecs: 'No active subscription',
         cardLast4: '',
         cardBrand: '',
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        currentPeriodEnd: null,
         cancelAtPeriodEnd: false,
       }),
+    },
+    invoices: {
+      type: [invoiceSchema],
+      default: [],
     },
     refreshTokens: {
       type: [String],

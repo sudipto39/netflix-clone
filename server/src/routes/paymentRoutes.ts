@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getSubscription,
   changePlan,
+  subscribe,
   updatePaymentMethod,
   updateCredentials,
   createCheckoutSession,
@@ -9,6 +10,7 @@ import {
   getInvoices,
   cancelSubscription,
   changePlanSchema,
+  subscribeSchema,
   updateCredentialsSchema,
   updatePaymentMethodSchema,
 } from '../controllers/paymentController.js';
@@ -22,6 +24,7 @@ router.use(protect);
 
 router.get('/subscription', getSubscription);
 router.get('/invoices', getInvoices);
+router.post('/subscribe', validate(subscribeSchema), subscribe);
 router.post('/change-plan', validate(changePlanSchema), changePlan);
 
 // PCI-safe: accepts Stripe paymentMethodId (not raw card data)

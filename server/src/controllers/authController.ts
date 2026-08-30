@@ -107,6 +107,7 @@ const sendTokenResponse = async (
         role: user.role,
         avatar: user.avatar,
         authProvider: user.authProvider,
+        subscription: user.subscription,
       },
     },
   });
@@ -514,6 +515,7 @@ export const getMe = async (req: AuthenticatedRequest, res: Response, next: Next
           role: req.user.role,
           avatar: req.user.avatar,
           authProvider: req.user.authProvider,
+          subscription: req.user.subscription,
         },
         profiles: userProfiles,
       },

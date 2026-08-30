@@ -25,6 +25,12 @@ export interface Session {
     email: string;
     role?: "user" | "admin" | string;
     image?: string;
+    subscription?: {
+      status: string;
+      planId: string;
+      planName?: string;
+      currentPeriodEnd?: string | null;
+    };
   };
 }
 
@@ -163,7 +169,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     if (hasSession()) {
       try {
         const res = await apiRequest<{
-          data: { user: { id: string; name: string; email: string; avatar?: string } };
+          data: { user: { id: string; name: string; email: string; avatar?: string; subscription?: Session["user"]["subscription"] } };
         }>("/auth/me");
         const session: Session = {
           user: {
@@ -171,6 +177,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             name: res.data.user.name,
             email: res.data.user.email,
             image: res.data.user.avatar,
+            subscription: res.data.user.subscription,
           },
         };
         saveSession(session);
@@ -249,7 +256,7 @@ export async function signIn(
       // Send to backend for verification and session creation
       const res = await apiRequest<{
         token: string;
-        data: { user: { id: string; name: string; email: string; avatar?: string } };
+        data: { user: { id: string; name: string; email: string; avatar?: string; subscription?: Session["user"]["subscription"] } };
       }>("/auth/google", {
         method: "POST",
         body: JSON.stringify({ idToken }),
@@ -265,6 +272,7 @@ export async function signIn(
           name: res.data.user.name,
           email: res.data.user.email,
           image: res.data.user.avatar,
+          subscription: res.data.user.subscription,
         },
       };
       saveSession(session);
@@ -298,7 +306,7 @@ export async function signIn(
   try {
     const res = await apiRequest<{
       token?: string;
-      data: { user: { id: string; name: string; email: string; role?: string; avatar?: string } };
+      data: { user: { id: string; name: string; email: string; role?: string; avatar?: string; subscription?: Session["user"]["subscription"] } };
     }>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
@@ -315,6 +323,7 @@ export async function signIn(
         email: res.data.user.email,
         role: res.data.user.role || (res.data.user.email === "admin@streamly.com" ? "admin" : "user"),
         image: res.data.user.avatar,
+        subscription: res.data.user.subscription,
       },
     };
     saveSession(session);
@@ -343,7 +352,7 @@ export async function verifyEmailOtp(
       status: string;
       message: string;
       token?: string;
-      data: { user: { id: string; name: string; email: string; avatar?: string } };
+      data: { user: { id: string; name: string; email: string; avatar?: string; subscription?: Session["user"]["subscription"] } };
     }>("/auth/verify-email", {
       method: "POST",
       body: JSON.stringify({ email, otp }),
@@ -359,6 +368,7 @@ export async function verifyEmailOtp(
         name: res.data.user.name,
         email: res.data.user.email,
         image: res.data.user.avatar,
+        subscription: res.data.user.subscription,
       },
     };
     saveSession(session);
